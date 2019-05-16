@@ -6,6 +6,12 @@ import javax.swing.JOptionPane;
 
 public abstract class Connector {
 	
+	/*
+	 * This creates a connection.
+	 * It returns a connection object. Thats how it works (look at the TableCreator class main method)
+	 * You are supposed to send database user name and password to this method.
+	 * 
+	*/
 	public static Connection CreateConnection(String username, String password) {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -19,15 +25,15 @@ public abstract class Connector {
 		try {
 			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", username, password);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Incorrect username or password", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "->Incorrect username or password\n->Database connection could not be established", "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			return null;
 		}
-	
 		return con;
 	}
-	
+	//Terminate your connection when the program is done.
 	public static void TerminateConnection(Connection con) {
+		
 		try {
 			con.close();
 		} catch (SQLException e) {

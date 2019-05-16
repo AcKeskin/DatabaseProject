@@ -1,34 +1,39 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.GridLayout;
-import java.awt.LayoutManager;
-import java.awt.Panel;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
-
-import oracle.ons.CreatePermission;
 
 public abstract class TableCreator {
+	
+	/*
+	 * If you are getting an error about ojdbc drivers. Add ojdbc jars to your project libraries.
+	 * Build path .-> Libraries -> Add external jars.
+	 */
+	
+	/*
+	 * DONT CREATE A TableCreator OBJECT THIS ENTIRE CLASS IS USING STATIC METHODS. Just call the createPanelWithResultSet method. 
+	 */
+	
+	//main is not necessary. Use your own main and delete this
 	public static void main(String[] args) {
 
-		/*DATA is a user. 
+		/*
+		 * Connection class does exactly what it says. It connects java and database.
+		 * 
+		 * DATA is a user. 
 		 * Users have tables.
-		 * If you try to connect with other user, you wont get results(because they dont have the necessary tables)*/
+		 * If you try to connect with other user, you wont get results(because they dont have the necessary tables)
+		 * 
+		 */
 		Connection con = Connector.CreateConnection("DATA", "system123");
+		
+		
+		
 		JFrame frame = new JFrame("TITLE");
 		frame.setSize(500,1000);
 		String statement = "SELECT * FROM director";
@@ -39,10 +44,18 @@ public abstract class TableCreator {
 			frame.add(pane);
 		}
 		frame.repaint();
-		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+		
+		
 	}
 	
+	
+	/*
+	 * You only need to call createPanelWithResultSet method. Send a connection and the sql statement.
+	 * The method will return a JScrollPanel with necessary data being showed with a table.
+	 * 
+	 */
 	public static JScrollPane createPanelWithResultSet(Connection con, String statement) {
 		return new JScrollPane(resultSetToTable(getResultSet(con, statement)));
 	} 
