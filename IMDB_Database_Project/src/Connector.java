@@ -12,6 +12,7 @@ public abstract class Connector {
 	 * You are supposed to send database user name and password to this method.
 	 * 
 	*/
+	
 	public static Connection CreateConnection(String username, String password) {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");

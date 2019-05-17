@@ -19,37 +19,9 @@ public abstract class TableCreator {
 	 * DONT CREATE A TableCreator OBJECT THIS ENTIRE CLASS IS USING STATIC METHODS. Just call the createPanelWithResultSet method. 
 	 */
 	
-	//main is not necessary. Use your own main and delete this
 	public static void main(String[] args) {
-
-		/*
-		 * Connection class does exactly what it says. It connects java and database.
-		 * 
-		 * DATA is a user. 
-		 * Users have tables.
-		 * If you try to connect with other user, you wont get results(because they dont have the necessary tables)
-		 * 
-		 */
-		Connection con = Connector.CreateConnection("DATA", "system123");
-		
-		
-		
-		JFrame frame = new JFrame("TITLE");
-		frame.setSize(500,1000);
-		String statement = "SELECT * FROM director";
-		
-		JScrollPane pane = createPanelWithResultSet(con, statement);
-		
-		if(pane != null) {
-			frame.add(pane);
-		}
-		frame.repaint();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		
 		
 	}
-	
 	
 	/*
 	 * You only need to call createPanelWithResultSet method. Send a connection and the sql statement.
@@ -69,7 +41,7 @@ public abstract class TableCreator {
 		if(result != null) {
 		try {
 			metaData = result.getMetaData();
-			System.out.println(metaData.getColumnName(1));
+			//System.out.println(metaData.getColumnName(1));
 			columnCount = metaData.getColumnCount();
 			columnNames = new String[columnCount];
 			for(int i = 0; i < columnCount; i++) {
@@ -97,6 +69,7 @@ public abstract class TableCreator {
 					}
 					//When finished reading a row put it to an arrayList
 					dataArray.add(rowData.clone());
+					
 					System.out.println();
 					result.next();//Move the cursor to next row
 				}while(!result.isAfterLast());
