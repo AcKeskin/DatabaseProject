@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 public abstract class TableCreator {
 	
@@ -18,10 +20,7 @@ public abstract class TableCreator {
 	/*
 	 * DONT CREATE A TableCreator OBJECT THIS ENTIRE CLASS IS USING STATIC METHODS. Just call the createPanelWithResultSet method. 
 	 */
-	
-	public static void main(String[] args) {
-		
-	}
+
 	
 	/*
 	 * You only need to call createPanelWithResultSet method. Send a connection and the sql statement.
@@ -30,7 +29,7 @@ public abstract class TableCreator {
 	 */
 	public static JScrollPane createPanelWithResultSet(Connection con, String statement) {
 		return new JScrollPane(resultSetToTable(getResultSet(con, statement)));
-	} 
+	}
 	
 	private static JTable resultSetToTable(ResultSet result) {
 		
@@ -61,6 +60,7 @@ public abstract class TableCreator {
 				result.next();
 				Object[] rowData = new Object[columnCount];
 				do {
+					if(!result.isAfterLast()) {
 					//Reads data one by one for each row. And puts it to rowData object
 					for(int i = 0; i <columnCount; i++) {
 						//object = result.getObject(i);
@@ -72,9 +72,18 @@ public abstract class TableCreator {
 					
 					System.out.println();
 					result.next();//Move the cursor to next row
+					}
 				}while(!result.isAfterLast());
-				
-				return new JTable(convertToArray(dataArray),columnNames);
+				JTable table = new JTable(convertToArray(dataArray),columnNames);
+				table.getModel().addTableModelListener(new TableModelListener() {
+					
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						// TODO Auto-generated method stub
+						System.out.println(e.getLastRow());
+					}
+				});
+				return table;
 				
 			}catch(SQLException e){
 				e.printStackTrace();
@@ -96,7 +105,6 @@ public abstract class TableCreator {
 			e.printStackTrace();
 			System.out.println("Could not create a statement or execute it");
 		}
-		
 		return null;
 	}
 	
