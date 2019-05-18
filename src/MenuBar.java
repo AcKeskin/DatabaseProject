@@ -101,7 +101,7 @@ public class MenuBar {
 	Connection c;
 
 	public MenuBar() {
-
+		
 		// launch jframe
 		frame = new JFrame("TERMINAL");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -380,7 +380,7 @@ public class MenuBar {
 
 	}
 
-	public class addDirector implements ActionListener {// done
+	public class addDirector implements ActionListener {// done2
 
 		public void actionPerformed(ActionEvent e) {
 			JTextField directorName = new JTextField();
@@ -407,7 +407,7 @@ public class MenuBar {
 				else {
 					// add director here
 					try {
-						st.executeQuery("INSERT INTO DIRECTOR VALUES(" + (directorID + 1) + ",'"
+						st.executeQuery("INSERT INTO DIRECTOR VALUES(dr_id_creator.NEXTVAL,'"
 								+ directorName.getText() + "')");
 						JOptionPane.showMessageDialog(null,
 								directorName.getText() + " successfully added to the database!");
@@ -538,7 +538,7 @@ public class MenuBar {
 
 	}
 
-	public class addMovie implements ActionListener {// done
+	public class addMovie implements ActionListener {// done2
 
 		public void actionPerformed(ActionEvent e) {
 
@@ -572,7 +572,7 @@ public class MenuBar {
 					JOptionPane.showMessageDialog(null, "Movie name cannot be empty!");
 				} else {
 					try {
-						st.executeQuery("INSERT INTO MOVIE VALUES(" + (movieID + 1) + ",'" + movieName.getText()
+						st.executeQuery("INSERT INTO MOVIE VALUES(m_id_creator.NEXTVAL,'" + movieName.getText()
 								+ "',TO_DATE('" + movieDate.getText() + "', 'YYYY/MM/DD'),"
 								+ Integer.parseInt(movieBoxOffice.getText()) + ",'" + movieMPAA.getText() + "',"
 								+ Integer.parseInt(movieBudget.getText()) + ","
@@ -665,6 +665,7 @@ public class MenuBar {
 
 						} catch (Exception e2) {
 							// TODO: handle exception
+							e2.printStackTrace();
 						}
 					}
 				} else {
@@ -736,7 +737,7 @@ public class MenuBar {
 
 	}
 
-	public class addActor implements ActionListener {// done
+	public class addActor implements ActionListener {// done2
 
 		public void actionPerformed(ActionEvent e) {
 			JTextField actorName = new JTextField();
@@ -763,7 +764,7 @@ public class MenuBar {
 				} else {
 					// add director here
 					try {
-						st.executeQuery("INSERT INTO ACTOR VALUES(" + (actorID + 1) + ",'" + actorName.getText() + "',"
+						st.executeQuery("INSERT INTO ACTOR VALUES(ac_id_creator.NEXTVAL,'" + actorName.getText() + "',"
 								+ Integer.parseInt(actorHeight.getText()) + ","
 								+ Integer.parseInt(actorWeight.getText()) + ",'" + actorHair.getText() + "')");
 						JOptionPane.showMessageDialog(null,
@@ -911,7 +912,7 @@ public class MenuBar {
 
 	public class addAward implements ActionListener {// done
 
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e) {//done2
 
 			JTextField awardName = new JTextField();
 			JTextField awardDate = new JTextField();
@@ -937,7 +938,7 @@ public class MenuBar {
 				} else {
 					try {
 						st.executeQuery("INSERT INTO AWARDS VALUES('" + awardName.getText() + "',TO_DATE('"
-								+ awardDate.getText() + "', 'YYYY/MM/DD')," + (awardID + 1) + ")");
+								+ awardDate.getText() + "', 'YYYY/MM/DD'),aw_id_creator.NEXTVAL)");
 
 						JOptionPane.showMessageDialog(null,
 								awardName.getText() + " successfully added to the database!");
@@ -1009,7 +1010,7 @@ public class MenuBar {
 
 	public class addStudio implements ActionListener {// done
 
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e) {//done2
 
 			JTextField studioName = new JTextField();
 			JTextField studioCEO = new JTextField();
@@ -1035,7 +1036,7 @@ public class MenuBar {
 					JOptionPane.showMessageDialog(null, "Studio name cannot be empty!");
 				} else {
 					try {
-						st.executeQuery("INSERT INTO STUDIO VALUES(" + (studioID + 1) + ",'" + studioName.getText()
+						st.executeQuery("INSERT INTO STUDIO VALUES(st_id_creator.NEXTVAL,'" + studioName.getText()
 								+ "','" + studioCEO.getText() + "'," + Integer.parseInt(studioValue.getText()) + ")");
 
 						/*
