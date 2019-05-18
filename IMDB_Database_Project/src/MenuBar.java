@@ -42,8 +42,8 @@ import javax.swing.border.LineBorder;
 
 public class MenuBar {
 
-	private Font textFont = new Font("Century Gothic",Font.PLAIN,20);
-	private Font uiFont = new Font("Century Gothic",Font.BOLD,15);
+	private Font textFont = new Font("Century Gothic", Font.PLAIN, 20);
+	private Font uiFont = new Font("Century Gothic", Font.BOLD, 15);
 	// JFrame
 	private JFrame frame;
 	// MenuBar
@@ -86,8 +86,8 @@ public class MenuBar {
 	private JLabel label;
 
 	Connection c;
-	public MenuBar()  {
 
+	public MenuBar() {
 
 		// launch jframe
 		frame = new JFrame("TERMINAL");
@@ -96,7 +96,7 @@ public class MenuBar {
 
 		button = new JButton("Log In!");
 		button.setFont(textFont);
-		button.setSize(100,50);
+		button.setSize(100, 50);
 		button.setLocation(614, 0);
 		button.setBackground(Color.RED);
 		// build the Edit menu
@@ -121,6 +121,17 @@ public class MenuBar {
 		search.add(searchDirectors);
 		search.add(searchAwards);
 		search.add(searchStudios);
+		searchStudio searchS = new searchStudio();
+		searchActor searchA = new searchActor();
+		searchAward searchAw = new searchAward();
+		searchMovie searchM = new searchMovie();
+		searchDirector searchD = new searchDirector();
+		searchStudios.addActionListener(searchS);
+		searchActors.addActionListener(searchA);
+		searchAwards.addActionListener(searchAw);
+		searchDirectors.addActionListener(searchD);
+		searchMovies.addActionListener(searchM);
+
 		// add menus to menubar
 		menuBar.add(manageMenu);
 		menuBar.add(search);
@@ -131,12 +142,12 @@ public class MenuBar {
 		// set the jframe
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setPreferredSize(new Dimension(720, 600));
-		//frame.setSize(720, 600);
+		// frame.setSize(720, 600);
 		frame.pack();
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 
-		//frame.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		// frame.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		frame.setLayout(null);
 		frame.setVisible(true);
 
@@ -144,7 +155,7 @@ public class MenuBar {
 		label = new JLabel("label");
 		label.setText("Not Logged In");
 		label.setSize(500, 100);
-		label.setLocation(590,470);
+		label.setLocation(590, 470);
 		label.setFont(textFont);
 		label.setForeground(Color.black);
 
@@ -159,18 +170,15 @@ public class MenuBar {
 		searchStudios.setFont(uiFont);
 		logIn.setFont(uiFont);
 
-		//there is no connection in the beginning
-		c=null;
-
+		// there is no connection in the beginning
+		c = null;
 
 		// finally
 		frame.add(label);
 		frame.add(button);
 
-
 		frame.repaint();
 	}
-
 
 	public void logIn() {
 
@@ -190,7 +198,6 @@ public class MenuBar {
 		addElement.setFont(textFont);
 		removeElement.setFont(textFont);
 		updateElement.setFont(textFont);
-
 
 		// Sub menu comp
 
@@ -235,7 +242,6 @@ public class MenuBar {
 		updateElement.add(updateMovie);
 		updateElement.add(updateStudio);
 		updateElement.add(updateAward);
-
 
 		// FONTS
 
@@ -313,60 +319,53 @@ public class MenuBar {
 		removeAward.addActionListener(removeAW);
 
 		updateAward updateAW = new updateAward();
-		updateAward.addActionListener(updateAW); 
+		updateAward.addActionListener(updateAW);
 
 	}
 
-	public class logInEvent implements ActionListener{
-
+	public class logInEvent implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 
 			JTextField username = new JTextField();
 			JTextField password = new JPasswordField();
-			Object[] message = {
-					"Username:", username,
-					"Password:", password
-			};
+			Object[] message = { "Username:", username, "Password:", password };
 			int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 
-				c = Connector.CreateConnection("admin", "amk123"); //userame.gettext e cevir
-				if ( c != null) {
+				c = Connector.CreateConnection("admin", "amk123"); // userame.gettext e cevir
+				if (c != null) {
 					logIn();
-					JOptionPane.showMessageDialog(null,"Successfully logged in!");
+					JOptionPane.showMessageDialog(null, "Successfully logged in!");
 					label.setText("Logged in!");
 				} else {
-					JOptionPane.showMessageDialog(null,"Invalid username or password!");
+					JOptionPane.showMessageDialog(null, "Invalid username or password!");
 				}
 			} else {
-				//JOptionPane.showMessageDialog(null,"Login Cancelled!");
+				// JOptionPane.showMessageDialog(null,"Login Cancelled!");
 			}
 
 		}
 
 	}
 
-	public class addDirector implements ActionListener{//done
+	public class addDirector implements ActionListener {// done
 
 		public void actionPerformed(ActionEvent e) {
 			JTextField directorName = new JTextField();
-			Object[] message = {
-					"Director Name:", directorName,
-			};
+			Object[] message = { "Director Name:", directorName, };
 
 			Statement st = null;
 			int directorID = -1;
 			try {
 				st = c.createStatement();
-				ResultSet rs= st.executeQuery("SELECT MAX(DIRECTOR_ID) FROM DIRECTOR");
+				ResultSet rs = st.executeQuery("SELECT MAX(DIRECTOR_ID) FROM DIRECTOR");
 				rs.next();
 				directorID = rs.getInt(1);
 				System.out.println(directorID);
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
-
 
 			int option = JOptionPane.showConfirmDialog(null, message, "New Director", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
@@ -377,8 +376,10 @@ public class MenuBar {
 				else {
 					// add director here
 					try {
-						st.executeQuery("INSERT INTO DIRECTOR VALUES(" + (directorID + 1) + ",'" + directorName.getText() + "')");
-						JOptionPane.showMessageDialog(null, directorName.getText() + " successfully added to the database!");
+						st.executeQuery("INSERT INTO DIRECTOR VALUES(" + (directorID + 1) + ",'"
+								+ directorName.getText() + "')");
+						JOptionPane.showMessageDialog(null,
+								directorName.getText() + " successfully added to the database!");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -386,52 +387,46 @@ public class MenuBar {
 				}
 			} else {
 
-				//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 			}
 
 		}
 	}
-	public class removeDirector implements ActionListener{//done
+
+	public class removeDirector implements ActionListener {// done
 
 		public void actionPerformed(ActionEvent e) {
-
 
 			Statement st = null;
 			int directorID = -1;
 			try {
 				table = new JFrame();
 
-
-
 				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM DIRECTOR"));
-
-
 
 				table.setSize(new Dimension(800, 600));
 				table.pack();
 				table.setVisible(true);
 				JTextField ID = new JTextField();
-				Object[] message2 = {
-						"ID you want to remove:", ID,
-				};
+				Object[] message2 = { "ID you want to remove:", ID, };
 				int deleteID = -1;
-				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete Director", JOptionPane.OK_CANCEL_OPTION);
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete Director",
+						JOptionPane.OK_CANCEL_OPTION);
 				if (option2 == JOptionPane.OK_OPTION) {
 					if (ID.getText().equals("")) {
 
-						JOptionPane.showMessageDialog(null,"ID Cannot be null!");
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
 					}
 
 					else {
 						deleteID = Integer.parseInt(ID.getText());
 						try {
 							st = c.createStatement();
-							st.executeQuery("DELETE FROM DIRECTOR WHERE DIRECTOR_ID = " + (deleteID) );
+							st.executeQuery("DELETE FROM DIRECTOR WHERE DIRECTOR_ID = " + (deleteID));
 							table.setVisible(false);
 							table = new JFrame();
 
 							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM DIRECTOR"));
-
 
 							table.setSize(new Dimension(800, 600));
 							table.pack();
@@ -442,45 +437,182 @@ public class MenuBar {
 					}
 				} else {
 
-					//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 				}
 
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 
-
-
-
 		}
 
 	}
-	public class updateDirector implements ActionListener{//done
+
+	public class updateDirector implements ActionListener {// done
 
 		public void actionPerformed(ActionEvent e) {
+			Statement st = null;
+			int directorID = -1;
+			try {
+				table = new JFrame();
+				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM DIRECTOR"));
+				table.setSize(new Dimension(800, 600));
+				table.pack();
+				table.setVisible(true);
+				JTextField ID = new JTextField();
+				Object[] message2 = { "ID you want to update:", ID, };
+				int updateID = -1;
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Update Director",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (option2 == JOptionPane.OK_OPTION) {
+					if (ID.getText().equals("")) {
+
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
+					}
+
+					else {
+						updateID = Integer.parseInt(ID.getText());
+						try {
+							st = c.createStatement();
+							JTextField name = new JTextField();
+							Object[] message3 = { "New Director Name:", name, };
+							int option3 = JOptionPane.showConfirmDialog(null, message2, "Update Director",
+									JOptionPane.OK_CANCEL_OPTION);
+							if (option3 == JOptionPane.OK_OPTION) {
+								if (name.getText().equals("")) {
+
+									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
+								} else {
+									st.executeQuery("UPDATE DIRECTOR SET DIRECTOR_NAME = '" + name.getText()
+											+ "' WHERE DIRECTOR_ID = " + (updateID));
+								}
+							}
+
+							table.setVisible(false);
+							table = new JFrame();
+
+							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM DIRECTOR"));
+
+							table.setSize(new Dimension(800, 600));
+							table.pack();
+							table.setVisible(true);
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
+					}
+				} else {
+
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				}
+
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}
+
+	}
+
+	public class updateMovie implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			Statement st = null;
+			int movieID = -1;
+			try {
+				table = new JFrame();
+				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM DIRECTOR"));
+				table.setSize(new Dimension(800, 600));
+				table.pack();
+				table.setVisible(true);
+				JTextField ID = new JTextField();
+				Object[] message2 = { "ID you want to update:", ID, };
+				int updateID = -1;
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Update Movie",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (option2 == JOptionPane.OK_OPTION) {
+					if (ID.getText().equals("")) {
+
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
+					}
+
+					else {
+						updateID = Integer.parseInt(ID.getText());
+						try {
+							st = c.createStatement();
+							JTextField movieName = new JTextField();
+
+							JTextField movieBudget = new JTextField();
+							JTextField movieBoxOffice = new JTextField();
+							JTextField movieMPAA = new JTextField();
+							JTextField movieDate = new JTextField();
+							JTextField movieRating = new JTextField();
+							Object[] message = { "Movie Title:", movieName,
+
+									"Budget:", movieBudget, "Box Office:", movieBoxOffice, "MPAA Rating:", movieMPAA,
+									"Release Date (YYYY/MM/DD):", movieDate, "Rating:", movieRating
+
+							};
+							int option3 = JOptionPane.showConfirmDialog(null, message2, "Update Actor",
+									JOptionPane.OK_CANCEL_OPTION);
+							if (option3 == JOptionPane.OK_OPTION) {
+								if (movieName.getText().equals("")) {
+
+									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
+								} else {
+									st.executeQuery("UPDATE MOVIE SET MOVIE_NAME = '" + movieName.getText()
+											+ "' WHERE MOVIE_ID = " + (updateID));
+									st.executeQuery("UPDATE MOVIE SET MOVIE_BUDGET = '"
+											+ Integer.parseInt(movieBudget.getText()) + "' WHERE MOVIE_ID = "
+											+ (updateID));
+									st.executeQuery("UPDATE MOVIE SET MOVIE_BOX_OFFICE = '"
+											+ Integer.parseInt(movieBoxOffice.getText()) + "' WHERE MOVIE_ID = "
+											+ (updateID));
+									st.executeQuery("UPDATE MOVIE SET MOVIE_RELEASE_DATE = TO_DATE('"
+											+ movieDate.getText() + "','YYYY/MM/DD') WHERE MOVIE_ID = " + (updateID));
+									st.executeQuery("UPDATE MOVIE SET MOVIE_RATING = '"
+											+ Integer.parseInt(movieRating.getText()) + "' WHERE MOVIE_ID = "
+											+ (updateID));
+								}
+							}
+
+							table.setVisible(false);
+							table = new JFrame();
+
+							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM ACTOR"));
+
+							table.setSize(new Dimension(800, 600));
+							table.pack();
+							table.setVisible(true);
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
+					}
+				} else {
+
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				}
+
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 
 		}
 
 	}
 
-	public class addActor implements ActionListener{//done
+	public class addActor implements ActionListener {// done
 
-	public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e) {
 			JTextField actorName = new JTextField();
 			JTextField actorHeight = new JTextField();
 			JTextField actorWeight = new JTextField();
 			JTextField actorHair = new JTextField();
-			Object[] message = {
-					"Actor Name:", actorName,
-					"Actor Height:", actorHeight,
-					"Actor Weight:", actorWeight,
-					"Actor Hair:", actorHair
-			};
+			Object[] message = { "Actor Name:", actorName, "Actor Height:", actorHeight, "Actor Weight:", actorWeight,
+					"Actor Hair:", actorHair };
 			Statement st = null;
 			int actorID = -1;
 			try {
 				st = c.createStatement();
-				ResultSet rs= st.executeQuery("SELECT MAX(ACTOR_ID) FROM ACTOR");
+				ResultSet rs = st.executeQuery("SELECT MAX(ACTOR_ID) FROM ACTOR");
 				rs.next();
 				actorID = rs.getInt(1);
 				System.out.println(actorID);
@@ -491,28 +623,30 @@ public class MenuBar {
 			if (option == JOptionPane.OK_OPTION) {
 				if (actorName.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "Actor name cannot be empty!");
-				}
-				else {
+				} else {
 					// add director here
 					try {
-						st.executeQuery("INSERT INTO ACTOR VALUES(" + (actorID + 1) + ",'" + actorName.getText() + "'," + Integer.parseInt(actorHeight.getText()) + "," +
-								Integer.parseInt(actorWeight.getText()) + ",'" + actorHair.getText() + "')");
-						JOptionPane.showMessageDialog(null, actorName.getText() + " successfully added to the database!");
+						st.executeQuery("INSERT INTO ACTOR VALUES(" + (actorID + 1) + ",'" + actorName.getText() + "',"
+								+ Integer.parseInt(actorHeight.getText()) + ","
+								+ Integer.parseInt(actorWeight.getText()) + ",'" + actorHair.getText() + "')");
+						JOptionPane.showMessageDialog(null,
+								actorName.getText() + " successfully added to the database!");
 
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(null,"Something wrong has happened! Check your input!");
+						JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
 						e1.printStackTrace();
 					}
 				}
 
 			} else {
-				//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 			}
 
 		}
 	}
-	public class removeActor implements ActionListener{//done
+
+	public class removeActor implements ActionListener {// done
 
 		public void actionPerformed(ActionEvent e) {
 
@@ -521,37 +655,31 @@ public class MenuBar {
 			try {
 				table = new JFrame();
 
-
-
 				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM ACTOR"));
-
-
 
 				table.setSize(new Dimension(800, 600));
 				table.pack();
 				table.setVisible(true);
 				JTextField ID = new JTextField();
-				Object[] message2 = {
-						"ID you want to remove:", ID,
-				};
+				Object[] message2 = { "ID you want to remove:", ID, };
 				int deleteID = -1;
-				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete Actor", JOptionPane.OK_CANCEL_OPTION);
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete Actor",
+						JOptionPane.OK_CANCEL_OPTION);
 				if (option2 == JOptionPane.OK_OPTION) {
 					if (ID.getText().equals("")) {
 
-						JOptionPane.showMessageDialog(null,"ID Cannot be null!");
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
 					}
 
 					else {
 						deleteID = Integer.parseInt(ID.getText());
 						try {
 							st = c.createStatement();
-							st.executeQuery("DELETE FROM ACTOR WHERE ACTOR_ID = " + (deleteID) );
+							st.executeQuery("DELETE FROM ACTOR WHERE ACTOR_ID = " + (deleteID));
 							table.setVisible(false);
 							table = new JFrame();
 
 							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM ACTOR"));
-
 
 							table.setSize(new Dimension(800, 600));
 							table.pack();
@@ -562,28 +690,91 @@ public class MenuBar {
 					}
 				} else {
 
-					//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 				}
 
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 
-
-
-
 		}
 	}
-	public class updateActor implements ActionListener{
+
+	public class updateActor implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
+			Statement st = null;
+			int actorID = -1;
+			try {
+				table = new JFrame();
+				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM DIRECTOR"));
+				table.setSize(new Dimension(800, 600));
+				table.pack();
+				table.setVisible(true);
+				JTextField ID = new JTextField();
+				Object[] message2 = { "ID you want to update:", ID, };
+				int updateID = -1;
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Update Actor",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (option2 == JOptionPane.OK_OPTION) {
+					if (ID.getText().equals("")) {
 
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
+					}
+
+					else {
+						updateID = Integer.parseInt(ID.getText());
+						try {
+							st = c.createStatement();
+							JTextField name = new JTextField();
+							JTextField height = new JTextField();
+							JTextField weight = new JTextField();
+							JTextField hair = new JTextField();
+							Object[] message3 = { "New Actor Name:", name, "New Actor Height:", height,
+									"New Actor Weight:", weight, "New Actor Hair:", hair };
+							int option3 = JOptionPane.showConfirmDialog(null, message2, "Update Actor",
+									JOptionPane.OK_CANCEL_OPTION);
+							if (option3 == JOptionPane.OK_OPTION) {
+								if (name.getText().equals("")) {
+
+									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
+								} else {
+									st.executeQuery("UPDATE ACTOR SET ACTOR_NAME = '" + name.getText()
+											+ "' WHERE ACTOR_ID = " + (updateID));
+									st.executeQuery("UPDATE ACTOR SET ACTOR_HEIGHT = '"
+											+ Integer.parseInt(height.getText()) + "' WHERE ACTOR_ID = " + (updateID));
+									st.executeQuery("UPDATE ACTOR SET ACTOR_WEIGHT = '"
+											+ Integer.parseInt(weight.getText()) + "' WHERE ACTOR_ID = " + (updateID));
+									st.executeQuery("UPDATE ACTOR SET ACTOR_HAIR = '" + hair.getText()
+											+ "' WHERE ACTOR_ID = " + (updateID));
+								}
+							}
+
+							table.setVisible(false);
+							table = new JFrame();
+
+							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM ACTOR"));
+
+							table.setSize(new Dimension(800, 600));
+							table.pack();
+							table.setVisible(true);
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
+					}
+				} else {
+
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				}
+
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 		}
 
 	}
 
-	public class addMovie implements ActionListener{//done
-
+	public class addMovie implements ActionListener {// done
 
 		public void actionPerformed(ActionEvent e) {
 
@@ -594,22 +785,17 @@ public class MenuBar {
 			JTextField movieMPAA = new JTextField();
 			JTextField movieDate = new JTextField();
 			JTextField movieRating = new JTextField();
-			Object[] message = {
-					"Movie Title:", movieName,
+			Object[] message = { "Movie Title:", movieName,
 
-					"Budget:", movieBudget,
-					"Box Office:", movieBoxOffice,
-					"MPAA Rating:", movieMPAA,
-					"Release Date (YYYY/MM/DD):", movieDate,
-					"Rating:", movieRating
-
+					"Budget:", movieBudget, "Box Office:", movieBoxOffice, "MPAA Rating:", movieMPAA,
+					"Release Date (YYYY/MM/DD):", movieDate, "Rating:", movieRating
 
 			};
 			Statement st = null;
 			int movieID = -1;
 			try {
 				st = c.createStatement();
-				ResultSet rs= st.executeQuery("SELECT MAX(MOVIE_ID) FROM MOVIE");
+				ResultSet rs = st.executeQuery("SELECT MAX(MOVIE_ID) FROM MOVIE");
 				rs.next();
 				movieID = rs.getInt(1);
 				System.out.println(movieID);
@@ -620,32 +806,33 @@ public class MenuBar {
 			if (option == JOptionPane.OK_OPTION) {
 				if (movieName.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "Movie name cannot be empty!");
-				}
-				else {
+				} else {
 					try {
-						st.executeQuery("INSERT INTO MOVIE VALUES(" + (movieID + 1) + ",'" + movieName.getText() + "',TO_DATE('" + movieDate.getText() + "', 'YYYY/MM/DD')," + Integer.parseInt(movieBoxOffice.getText()) +
-								",'" + movieMPAA.getText() + "'," + Integer.parseInt(movieBudget.getText()) + "," + Integer.parseInt(movieRating.getText()) + ")");
+						st.executeQuery("INSERT INTO MOVIE VALUES(" + (movieID + 1) + ",'" + movieName.getText()
+								+ "',TO_DATE('" + movieDate.getText() + "', 'YYYY/MM/DD'),"
+								+ Integer.parseInt(movieBoxOffice.getText()) + ",'" + movieMPAA.getText() + "',"
+								+ Integer.parseInt(movieBudget.getText()) + ","
+								+ Integer.parseInt(movieRating.getText()) + ")");
 
-						JOptionPane.showMessageDialog(null, movieName.getText() + " successfully added to the database!");
+						JOptionPane.showMessageDialog(null,
+								movieName.getText() + " successfully added to the database!");
 
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(null,"Something wrong has happened! Check your input!");
+						JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
 						e1.printStackTrace();
 					}
 				}
 
 			} else {
-				//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 			}
-
-
 
 		}
 
 	}
-	public class removeMovie implements ActionListener{
 
+	public class removeMovie implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 
@@ -654,37 +841,31 @@ public class MenuBar {
 			try {
 				table = new JFrame();
 
-
-
 				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM MOVIE"));
-
-
 
 				table.setSize(new Dimension(800, 600));
 				table.pack();
 				table.setVisible(true);
 				JTextField ID = new JTextField();
-				Object[] message2 = {
-						"ID you want to remove:", ID,
-				};
+				Object[] message2 = { "ID you want to remove:", ID, };
 				int deleteID = -1;
-				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete MOVIE", JOptionPane.OK_CANCEL_OPTION);
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete MOVIE",
+						JOptionPane.OK_CANCEL_OPTION);
 				if (option2 == JOptionPane.OK_OPTION) {
 					if (ID.getText().equals("")) {
 
-						JOptionPane.showMessageDialog(null,"ID Cannot be null!");
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
 					}
 
 					else {
 						deleteID = Integer.parseInt(ID.getText());
 						try {
 							st = c.createStatement();
-							st.executeQuery("DELETE FROM MOVIE WHERE MOVIE_ID = " + (deleteID) );
+							st.executeQuery("DELETE FROM MOVIE WHERE MOVIE_ID = " + (deleteID));
 							table.setVisible(false);
 							table = new JFrame();
 
 							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM MOVIE"));
-
 
 							table.setSize(new Dimension(800, 600));
 							table.pack();
@@ -695,50 +876,32 @@ public class MenuBar {
 					}
 				} else {
 
-					//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 				}
 
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 
-
-
-
-		}
-
-	}
-	public class updateMovie implements ActionListener{
-
-
-		public void actionPerformed(ActionEvent e) {
-
-
 		}
 
 	}
 
-	public class addAward implements ActionListener{//done
-
+	public class addAward implements ActionListener {// done
 
 		public void actionPerformed(ActionEvent e) {
-
 
 			JTextField awardName = new JTextField();
 			JTextField awardDate = new JTextField();
 
-			Object[] message = {
-					"Award Name:", awardName,
-					"Award Date (YYYY/MM/DD):", awardDate
-
-
+			Object[] message = { "Award Name:", awardName, "Award Date (YYYY/MM/DD):", awardDate
 
 			};
 			Statement st = null;
 			int awardID = -1;
 			try {
 				st = c.createStatement();
-				ResultSet rs= st.executeQuery("SELECT MAX(AWARD_ID) FROM AWARDS");
+				ResultSet rs = st.executeQuery("SELECT MAX(AWARD_ID) FROM AWARDS");
 				rs.next();
 				awardID = rs.getInt(1);
 				System.out.println(awardID);
@@ -749,32 +912,30 @@ public class MenuBar {
 			if (option == JOptionPane.OK_OPTION) {
 				if (awardName.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "Award name cannot be empty!");
-				}
-				else {
+				} else {
 					try {
-						st.executeQuery("INSERT INTO AWARDS VALUES('" + awardName.getText() + "',TO_DATE('" + awardDate.getText() + "', 'YYYY/MM/DD')," + (awardID + 1) + ")");
+						st.executeQuery("INSERT INTO AWARDS VALUES('" + awardName.getText() + "',TO_DATE('"
+								+ awardDate.getText() + "', 'YYYY/MM/DD')," + (awardID + 1) + ")");
 
-						JOptionPane.showMessageDialog(null, awardName.getText() + " successfully added to the database!");
+						JOptionPane.showMessageDialog(null,
+								awardName.getText() + " successfully added to the database!");
 
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(null,"Something wrong has happened! Check your input!");
+						JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
 						e1.printStackTrace();
 					}
 				}
 
 			} else {
-				//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 			}
-
-
-
 
 		}
 
 	}
-	public class removeAward implements ActionListener{
 
+	public class removeAward implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 
@@ -783,37 +944,31 @@ public class MenuBar {
 			try {
 				table = new JFrame();
 
-
-
 				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM AWARD"));
-
-
 
 				table.setSize(new Dimension(800, 600));
 				table.pack();
 				table.setVisible(true);
 				JTextField ID = new JTextField();
-				Object[] message2 = {
-						"ID you want to remove:", ID,
-				};
+				Object[] message2 = { "ID you want to remove:", ID, };
 				int deleteID = -1;
-				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete AWARD", JOptionPane.OK_CANCEL_OPTION);
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete AWARD",
+						JOptionPane.OK_CANCEL_OPTION);
 				if (option2 == JOptionPane.OK_OPTION) {
 					if (ID.getText().equals("")) {
 
-						JOptionPane.showMessageDialog(null,"ID Cannot be null!");
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
 					}
 
 					else {
 						deleteID = Integer.parseInt(ID.getText());
 						try {
 							st = c.createStatement();
-							st.executeQuery("DELETE FROM AWARD WHERE AWARD_ID = " + (deleteID) );
+							st.executeQuery("DELETE FROM AWARD WHERE AWARD_ID = " + (deleteID));
 							table.setVisible(false);
 							table = new JFrame();
 
 							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM AWARD"));
-
 
 							table.setSize(new Dimension(800, 600));
 							table.pack();
@@ -824,30 +979,18 @@ public class MenuBar {
 					}
 				} else {
 
-					//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 				}
 
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 
-
-
-		}
-
-	}
-	public class updateAward implements ActionListener{
-
-
-		public void actionPerformed(ActionEvent e) {
-
-
 		}
 
 	}
 
-	public class addStudio implements ActionListener{//done
-
+	public class addStudio implements ActionListener {// done
 
 		public void actionPerformed(ActionEvent e) {
 
@@ -855,19 +998,14 @@ public class MenuBar {
 			JTextField studioCEO = new JTextField();
 			JTextField studioValue = new JTextField();
 
-			Object[] message = {
-					"Studio Name:", studioName,
-					"Studio Ceo: ", studioCEO,
-					"Studio Value:", studioValue
-
-
+			Object[] message = { "Studio Name:", studioName, "Studio Ceo: ", studioCEO, "Studio Value:", studioValue
 
 			};
 			Statement st = null;
 			int studioID = -1;
 			try {
 				st = c.createStatement();
-				ResultSet rs= st.executeQuery("SELECT MAX(STUDIO_ID) FROM STUDIO");
+				ResultSet rs = st.executeQuery("SELECT MAX(STUDIO_ID) FROM STUDIO");
 				rs.next();
 				studioID = rs.getInt(1);
 				System.out.println(studioID);
@@ -878,77 +1016,68 @@ public class MenuBar {
 			if (option == JOptionPane.OK_OPTION) {
 				if (studioName.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "Studio name cannot be empty!");
-				}
-				else {
+				} else {
 					try {
-						st.executeQuery("INSERT INTO STUDIO VALUES(" + (studioID+1) + ",'" + studioName.getText() + "','" + studioCEO.getText() +
-								"'," + Integer.parseInt(studioValue.getText()) + ")");
+						st.executeQuery("INSERT INTO STUDIO VALUES(" + (studioID + 1) + ",'" + studioName.getText()
+								+ "','" + studioCEO.getText() + "'," + Integer.parseInt(studioValue.getText()) + ")");
 
-						/*table = new JFrame("ANAN");
-						table.add(TableCreator.createPanelWithResultSet(c, "SElect * from studio"));
-						table.setSize(new Dimension(800, 600));
-						table.pack();
-						table.setVisible(true);*/
+						/*
+						 * table = new JFrame("ANAN");
+						 * table.add(TableCreator.createPanelWithResultSet(c, "SElect * from studio"));
+						 * table.setSize(new Dimension(800, 600)); table.pack(); table.setVisible(true);
+						 */
 
-
-
-						JOptionPane.showMessageDialog(null, studioName.getText() + " successfully added to the database!");
+						JOptionPane.showMessageDialog(null,
+								studioName.getText() + " successfully added to the database!");
 
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(null,"Something wrong has happened! Check your input!");
+						JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
 						e1.printStackTrace();
 					}
 				}
 
 			} else {
-				//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 			}
 		}
 
 	}
-	public class removeStudio implements ActionListener{
 
+	public class removeStudio implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-
 
 			Statement st = null;
 			int studioID = -1;
 			try {
 				table = new JFrame();
 
-
-
 				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM studio"));
-
-
 
 				table.setSize(new Dimension(800, 600));
 				table.pack();
 				table.setVisible(true);
 				JTextField ID = new JTextField();
-				Object[] message2 = {
-						"ID you want to remove:", ID,
-				};
+				Object[] message2 = { "ID you want to remove:", ID, };
 				int deleteID = -1;
-				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete studio", JOptionPane.OK_CANCEL_OPTION);
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Delete studio",
+						JOptionPane.OK_CANCEL_OPTION);
 				if (option2 == JOptionPane.OK_OPTION) {
 					if (ID.getText().equals("")) {
 
-						JOptionPane.showMessageDialog(null,"ID Cannot be null!");
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
 					}
 
 					else {
 						deleteID = Integer.parseInt(ID.getText());
 						try {
 							st = c.createStatement();
-							st.executeQuery("DELETE FROM studio WHERE studio_ID = " + (deleteID) );
+							st.executeQuery("DELETE FROM studio WHERE studio_ID = " + (deleteID));
 							table.setVisible(false);
 							table = new JFrame();
 
 							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM studio"));
-
 
 							table.setSize(new Dimension(800, 600));
 							table.pack();
@@ -959,27 +1088,337 @@ public class MenuBar {
 					}
 				} else {
 
-					//JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
 				}
 
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 
-
-
 		}
 
 	}
-	public class updateStudio implements ActionListener{
 
+
+	public class searchStudio implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 
+			JTextField searchField = new JTextField();
+			Object[] message = { "Searching Argument(s):", searchField, };
+			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			if (option == JOptionPane.OK_OPTION) {
+				try {
+
+					table = new JFrame("RESULT");
+					table.add(TableCreator.createPanelWithResultSet(c,
+							"SELECT NAME FROM STUDIO WHERE (NAME LIKE '"
+									+ searchField.getText().substring(0, 1).toUpperCase()
+									+ searchField.getText().substring(1) + "%') OR (NAME LIKE '%"
+									+ searchField.getText() + "%') OR (NAME LIKE '%" + searchField.getText() + "')"));
+					table.setSize(new Dimension(800, 600));
+					table.pack();
+					table.setVisible(true);
+
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
+					e1.printStackTrace();
+				}
+			}
+
+			else {
+				JOptionPane.showMessageDialog(null, "Searching Cancelled!");
+			}
+
+		}
+	}
+
+	public class searchActor implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+
+			JTextField searchField = new JTextField();
+			Object[] message = { "Searching Argument(s):", searchField, };
+			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			if (option == JOptionPane.OK_OPTION) {
+				try {
+
+					table = new JFrame("RESULT");
+					table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM ACTOR "
+							+ "WHERE (NAME LIKE '" + searchField.getText().substring(0, 1).toUpperCase()
+							+ searchField.getText().substring(1) + "%') OR (NAME LIKE '%" + searchField.getText()
+							+ "%') OR (NAME LIKE '%" + searchField.getText() + "')"));
+					table.setSize(new Dimension(800, 600));
+					table.pack();
+					table.setVisible(true);
+
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
+					e1.printStackTrace();
+				}
+			}
+
+			else {
+				JOptionPane.showMessageDialog(null, "Searching Cancelled!");
+			}
+
+		}
+	}
+
+	public class searchDirector implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+
+			JTextField searchField = new JTextField();
+			Object[] message = { "Searching Argument(s):", searchField, };
+			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			if (option == JOptionPane.OK_OPTION) {
+				try {
+
+					table = new JFrame("RESULT");
+					table.add(TableCreator.createPanelWithResultSet(c,
+							"SELECT * FROM DIRECTOR WHERE (NAME LIKE '"
+									+ searchField.getText().substring(0, 1).toUpperCase()
+									+ searchField.getText().substring(0) + "%') OR (NAME LIKE '%"
+									+ searchField.getText() + "%') OR (NAME LIKE '%" + searchField.getText() + "')"));
+					table.setSize(new Dimension(800, 600));
+					table.pack();
+					table.setVisible(true);
+
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
+					e1.printStackTrace();
+				}
+			}
+
+			else {
+				JOptionPane.showMessageDialog(null, "Searching Cancelled!");
+			}
+
+		}
+	}
+
+	public class searchAward implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+
+			JTextField searchField = new JTextField();
+			Object[] message = { "Searching Argument(s):", searchField, };
+			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			if (option == JOptionPane.OK_OPTION) {
+				try {
+
+					table = new JFrame("RESULT");
+					table.add(TableCreator.createPanelWithResultSet(c,
+							"SELECT AWARD_NAME FROM AWARDS WHERE (AWARD_NAME LIKE '"
+									+ searchField.getText().substring(0, 1).toUpperCase()
+									+ searchField.getText().substring(0) + "%') OR (AWARD_NAME LIKE '%"
+									+ searchField.getText() + "%') OR (AWARD_NAME LIKE '%" + searchField.getText()
+									+ "')"));
+					table.setSize(new Dimension(800, 600));
+					table.pack();
+					table.setVisible(true);
+
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
+					e1.printStackTrace();
+				}
+			}
+
+			else {
+				JOptionPane.showMessageDialog(null, "Searching Cancelled!");
+			}
+
+		}
+	}
+
+	public class searchMovie implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+
+			JTextField searchField = new JTextField();
+			Object[] message = { "Searching Argument(s):", searchField, };
+			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			if (option == JOptionPane.OK_OPTION) {
+				try {
+
+					table = new JFrame("RESULT");
+					table.add(TableCreator.createPanelWithResultSet(c,
+							"SELECT TITLE FROM MOVIE WHERE (TITLE LIKE '"
+									+ searchField.getText().substring(0, 1).toUpperCase()
+									+ searchField.getText().substring(0) + "%') OR (TITLE LIKE '%"
+									+ searchField.getText() + "%') OR (TITLE LIKE '%" + searchField.getText() + "')"));
+					table.setSize(new Dimension(800, 600));
+					table.pack();
+					table.setVisible(true);
+
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
+					e1.printStackTrace();
+				}
+			}
+
+			else {
+				JOptionPane.showMessageDialog(null, "Searching Cancelled!");
+			}
+
+		}
+	}
+
+	public class updateAward implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			Statement st = null;
+			int awardID = -1;
+			try {
+				table = new JFrame();
+				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM AWARDS"));
+				table.setSize(new Dimension(800, 600));
+				table.pack();
+				table.setVisible(true);
+				JTextField ID = new JTextField();
+				Object[] message2 = { "ID you want to update:", ID, };
+				int updateID = -1;
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Update Award",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (option2 == JOptionPane.OK_OPTION) {
+					if (ID.getText().equals("")) {
+
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
+					}
+
+					else {
+						updateID = Integer.parseInt(ID.getText());
+						try {
+							st = c.createStatement();
+							JTextField movieName = new JTextField();
+
+							JTextField movieDate = new JTextField();
+
+							Object[] message = { "Movie Title:", movieName,
+
+									"Release Date (YYYY/MM/DD):", movieDate,
+
+							};
+							int option3 = JOptionPane.showConfirmDialog(null, message2, "Update Award",
+									JOptionPane.OK_CANCEL_OPTION);
+							if (option3 == JOptionPane.OK_OPTION) {
+								if (movieName.getText().equals("")) {
+
+									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
+								} else {
+									st.executeQuery("UPDATE AWARDS SET AWARD_NAME = '" + movieName.getText()
+											+ "' WHERE AWARDS_ID = " + (updateID));
+
+									st.executeQuery("UPDATE AWARDS SET AWARD_DATE = TO_DATE('" + movieDate.getText()
+											+ "','YYYY/MM/DD') WHERE AWARD_ID = " + (updateID));
+
+								}
+							}
+
+							table.setVisible(false);
+							table = new JFrame();
+
+							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM AWARDS"));
+
+							table.setSize(new Dimension(800, 600));
+							table.pack();
+							table.setVisible(true);
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
+					}
+				} else {
+
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				}
+
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 
 		}
 
 	}
 
+	public class updateStudio implements ActionListener {
 
+		public void actionPerformed(ActionEvent e) {
+			Statement st = null;
+			int awardID = -1;
+			try {
+				table = new JFrame();
+				table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM STUDIO"));
+				table.setSize(new Dimension(800, 600));
+				table.pack();
+				table.setVisible(true);
+				JTextField ID = new JTextField();
+				Object[] message2 = { "ID you want to update:", ID, };
+				int updateID = -1;
+				int option2 = JOptionPane.showConfirmDialog(null, message2, "Update Studio",
+						JOptionPane.OK_CANCEL_OPTION);
+				if (option2 == JOptionPane.OK_OPTION) {
+					if (ID.getText().equals("")) {
+
+						JOptionPane.showMessageDialog(null, "ID Cannot be null!");
+					}
+
+					else {
+						updateID = Integer.parseInt(ID.getText());
+						try {
+							st = c.createStatement();
+							JTextField studioName = new JTextField();
+							JTextField studioCEO = new JTextField();
+							JTextField studioValue = new JTextField();
+
+							Object[] message = { "Movie Title:", studioName, "Studio CEO:", studioCEO, "Studio Value:",
+									studioValue
+
+							};
+							int option3 = JOptionPane.showConfirmDialog(null, message2, "Update Studio",
+									JOptionPane.OK_CANCEL_OPTION);
+							if (option3 == JOptionPane.OK_OPTION) {
+								if (studioName.getText().equals("")) {
+
+									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
+								} else {
+									st.executeQuery("UPDATE STUDIO SET STUDIO_NAME = '" + studioName.getText()
+											+ "' WHERE STUDIO_ID = " + (updateID));
+									st.executeQuery("UPDATE STUDIO SET STUDIO_CEO = '" + studioCEO.getText()
+											+ "' WHERE STUDIO_ID = " + (updateID));
+									st.executeQuery("UPDATE STUDIO SET STUDIO_VALUE = '"
+											+ Integer.parseInt(studioValue.getText()) + "' WHERE STUDIO_ID = "
+											+ (updateID));
+
+								}
+							}
+
+							table.setVisible(false);
+							table = new JFrame();
+
+							table.add(TableCreator.createPanelWithResultSet(c, "SELECT * FROM STUDIO"));
+
+							table.setSize(new Dimension(800, 600));
+							table.pack();
+							table.setVisible(true);
+						} catch (Exception e2) {
+							// TODO: handle exception
+						}
+					}
+				} else {
+
+					// JOptionPane.showMessageDialog(null,"Adding Cancelled!");
+				}
+
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+		}
+	}
 }
