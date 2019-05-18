@@ -457,6 +457,11 @@ public class MenuBar {
 							frame.validate();
 						} catch (SQLIntegrityConstraintViolationException e2) {
 							// TODO: handle exception
+							st.executeQuery("DELETE FROM MOVIE_PROJECT WHERE DIRECTOR_ID = " + (deleteID));
+							frame.remove(resultPane);
+							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM DIRECTOR");
+							frame.add(resultPane);
+							frame.validate();
 						}
 					}
 				} else {
@@ -466,6 +471,7 @@ public class MenuBar {
 
 			} catch (Exception e2) {
 				// TODO: handle exception
+				
 			}
 
 		}
@@ -812,8 +818,13 @@ public class MenuBar {
 							frame.validate();
 							frame.validate();
 
-						} catch (Exception e2) {
+						} catch (SQLIntegrityConstraintViolationException e2) {
 							// TODO: handle exception
+							st.executeQuery("DELETE FROM MOVIE_PROJECT WHERE ACTOR_ID = " + (deleteID));
+							frame.remove(resultPane);
+							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM ACTOR");
+							frame.add(resultPane);
+							frame.validate();
 						}
 					}
 				} else {
@@ -1081,8 +1092,13 @@ public class MenuBar {
 							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM STUDIO");
 							frame.add(resultPane);
 							frame.validate();
-						} catch (Exception e2) {
+						} catch (SQLIntegrityConstraintViolationException e2) {
 							// TODO: handle exception
+							st.executeQuery("DELETE FROM MOVIE_PROJECT WHERE STUDIO_ID = " + (deleteID));
+							frame.remove(resultPane);
+							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM STUDIO");
+							frame.add(resultPane);
+							frame.validate();
 						}
 					}
 				} else {
