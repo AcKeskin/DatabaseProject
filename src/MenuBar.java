@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -23,6 +24,8 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.text.AttributedCharacterIterator;
+import java.util.Random;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -101,7 +104,7 @@ public class MenuBar {
 	Connection c;
 
 	public MenuBar() {
-		
+
 		// launch jframe
 		frame = new JFrame("TERMINAL");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -186,12 +189,49 @@ public class MenuBar {
 		logIn.setFont(uiFont);
 
 		// there is no connection in the beginning
-		c = null;
+		c = Connector.CreateConnection("admin", "amk123"); // userame.gettext e cevir;
 
 		// finally
-		frame.add(resultPane);
+		resultPane = TableCreator.createPanelWithResultSet(c, returnRandomTableStatement());
+		if(resultPane != null)
+			frame.add(resultPane);
+		frame.validate();
+	}
 
-		frame.repaint();
+	public static String returnRandomTableStatement() {
+		String statement = null;
+		File f = new File("statements.txt");
+		try {
+			
+			if(f.exists()) {
+				
+				Scanner sc = new Scanner(f);
+				int lineCount = 0;
+				
+				while(sc.hasNextLine()) {
+					
+					sc.nextLine();
+					lineCount++;
+				}
+				sc.close();
+				sc = new Scanner(f);
+				Random rd = new Random();
+				
+				int lineNum = rd.nextInt(lineCount);
+				System.out.println(lineCount);
+				System.out.println(lineNum);
+				for(int i = 0; i<=lineNum; i++)
+					System.out.println(sc.nextLine());
+				
+				return sc.nextLine();
+				
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	public void logIn() {
@@ -246,7 +286,7 @@ public class MenuBar {
 		manageMenu.add(removeElement);
 		manageMenu.add(updateElement);
 		manageMenu.add(formConnection);
-		
+
 		addElement.add(addActor);
 		addElement.add(addDirector);
 		addElement.add(addMovie);
@@ -264,7 +304,7 @@ public class MenuBar {
 		updateElement.add(updateMovie);
 		updateElement.add(updateStudio);
 		updateElement.add(updateAward);
-		
+
 		formConnection.add(withActors);
 		formConnection.add(withDirector);
 		formConnection.add(withMovie);
@@ -351,8 +391,8 @@ public class MenuBar {
 		updateAward.addActionListener(updateAW);
 
 		// CON
-		
-		
+
+
 	}
 	public class logInEvent implements ActionListener {
 
@@ -471,7 +511,7 @@ public class MenuBar {
 
 			} catch (Exception e2) {
 				// TODO: handle exception
-				
+
 			}
 
 		}
@@ -514,7 +554,7 @@ public class MenuBar {
 									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
 								} else {
 									st.executeQuery("UPDATE DIRECTOR SET NAME = '" + name.getText()
-											+ "' WHERE DIRECTOR_ID = " + (updateID));
+									+ "' WHERE DIRECTOR_ID = " + (updateID));
 								}
 							}
 							frame.remove(resultPane);
@@ -573,10 +613,10 @@ public class MenuBar {
 				} else {
 					try {
 						st.executeQuery("INSERT INTO MOVIE VALUES(m_id_creator.NEXTVAL,'" + movieName.getText()
-								+ "',TO_DATE('" + movieDate.getText() + "', 'YYYY/MM/DD'),"
-								+ Integer.parseInt(movieBoxOffice.getText()) + ",'" + movieMPAA.getText() + "',"
-								+ Integer.parseInt(movieBudget.getText()) + ","
-								+ Integer.parseInt(movieRating.getText()) + ")");
+						+ "',TO_DATE('" + movieDate.getText() + "', 'YYYY/MM/DD'),"
+						+ Integer.parseInt(movieBoxOffice.getText()) + ",'" + movieMPAA.getText() + "',"
+						+ Integer.parseInt(movieBudget.getText()) + ","
+						+ Integer.parseInt(movieRating.getText()) + ")");
 
 						JOptionPane.showMessageDialog(null,
 								movieName.getText() + " successfully added to the database!");
@@ -651,7 +691,7 @@ public class MenuBar {
 											+ Integer.parseInt(movieBoxOffice.getText()) + "' WHERE MOVIE_ID = "
 											+ (updateID));
 									st.executeQuery("UPDATE MOVIE SET RELEASE_DATE = TO_DATE('" + movieDate.getText()
-											+ "','YYYY/MM/DD') WHERE MOVIE_ID = " + (updateID));
+									+ "','YYYY/MM/DD') WHERE MOVIE_ID = " + (updateID));
 									st.executeQuery("UPDATE MOVIE SET RATING = '"
 											+ Integer.parseInt(movieRating.getText()) + "' WHERE MOVIE_ID = " + (updateID));
 								}
@@ -882,9 +922,9 @@ public class MenuBar {
 									st.executeQuery("UPDATE ACTOR SET NAME = '" + name.getText() + "' WHERE ACTOR_ID = "
 											+ (updateID));
 									st.executeQuery("UPDATE ACTOR SET HEIGHT = '" + Integer.parseInt(height.getText())
-											+ "' WHERE ACTOR_ID = " + (updateID));
+									+ "' WHERE ACTOR_ID = " + (updateID));
 									st.executeQuery("UPDATE ACTOR SET WEIGHT = '" + Integer.parseInt(weight.getText())
-											+ "' WHERE ACTOR_ID = " + (updateID));
+									+ "' WHERE ACTOR_ID = " + (updateID));
 									st.executeQuery("UPDATE ACTOR SET HAIR = '" + hair.getText() + "' WHERE ACTOR_ID = "
 											+ (updateID));
 								}
@@ -1037,7 +1077,7 @@ public class MenuBar {
 				} else {
 					try {
 						st.executeQuery("INSERT INTO STUDIO VALUES(st_id_creator.NEXTVAL,'" + studioName.getText()
-								+ "','" + studioCEO.getText() + "'," + Integer.parseInt(studioValue.getText()) + ")");
+						+ "','" + studioCEO.getText() + "'," + Integer.parseInt(studioValue.getText()) + ")");
 
 						/*
 						 * table = new JFrame("ANAN");
@@ -1327,10 +1367,10 @@ public class MenuBar {
 									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
 								} else {
 									st.executeQuery("UPDATE AWARDS SET AWARD_NAME = '" + movieName.getText()
-											+ "' WHERE AWARD_ID = " + (updateID));
+									+ "' WHERE AWARD_ID = " + (updateID));
 
 									st.executeQuery("UPDATE AWARDS SET AWARD_DATE = TO_DATE('" + movieDate.getText()
-											+ "','YYYY/MM/DD') WHERE AWARD_ID = " + (updateID));
+									+ "','YYYY/MM/DD') WHERE AWARD_ID = " + (updateID));
 
 								}
 							}
@@ -1414,7 +1454,7 @@ public class MenuBar {
 							frame.validate();
 							frame.add(resultPane);
 							frame.validate();
-							
+
 						} catch (Exception e2) {
 							// TODO: handle exception
 						}
@@ -1430,7 +1470,7 @@ public class MenuBar {
 
 		}
 	}
-	
+
 	public class createProject implements ActionListener {
 
 		@Override
@@ -1442,12 +1482,12 @@ public class MenuBar {
 			JTextField moovie = new JTextField();
 
 
-			
+
 			Object[] message = { "Cast IDs List (seperate by comma):", actors, "Director Id:", director,
 					"Producer Studio ID:", studio, "Movie ID:", moovie };
 
 			int option = JOptionPane.showConfirmDialog(null, message, "New  Movie", JOptionPane.OK_CANCEL_OPTION);
-			
+
 			if (option == JOptionPane.OK_OPTION) {
 				String sqlS = "INSERT INTO MOVIE_PROJECT VALUES (" + Integer.parseInt(moovie.getText()) + ","
 						+ Integer.parseInt(director.getText()) + "," + Integer.parseInt(studio.getText()) + ",mp_id_creator.nextval)";
@@ -1466,7 +1506,7 @@ public class MenuBar {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}	
-				
+
 			}
 		}
 
@@ -1491,4 +1531,4 @@ public class MenuBar {
 
 	}
 
-	}
+}
