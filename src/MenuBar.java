@@ -101,7 +101,7 @@ public class MenuBar {
 	Connection c;
 
 	public MenuBar() {
-		
+
 		// launch jframe
 		frame = new JFrame("TERMINAL");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -163,7 +163,7 @@ public class MenuBar {
 		// frame.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		resultPane = new JScrollPane();
 		resultPane.setBackground(Color.RED);
-		frame.setLayout(new GridLayout(1,1));
+		frame.setLayout(new GridLayout(1, 1));
 		frame.setVisible(true);
 
 		// set the Jlabel
@@ -246,7 +246,7 @@ public class MenuBar {
 		manageMenu.add(removeElement);
 		manageMenu.add(updateElement);
 		manageMenu.add(formConnection);
-		
+
 		addElement.add(addActor);
 		addElement.add(addDirector);
 		addElement.add(addMovie);
@@ -264,7 +264,7 @@ public class MenuBar {
 		updateElement.add(updateMovie);
 		updateElement.add(updateStudio);
 		updateElement.add(updateAward);
-		
+
 		formConnection.add(withActors);
 		formConnection.add(withDirector);
 		formConnection.add(withMovie);
@@ -351,9 +351,9 @@ public class MenuBar {
 		updateAward.addActionListener(updateAW);
 
 		// CON
-		
-		
+
 	}
+
 	public class logInEvent implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -407,8 +407,8 @@ public class MenuBar {
 				else {
 					// add director here
 					try {
-						st.executeQuery("INSERT INTO DIRECTOR VALUES(dr_id_creator.NEXTVAL,'"
-								+ directorName.getText() + "')");
+						st.executeQuery(
+								"INSERT INTO DIRECTOR VALUES(dr_id_creator.NEXTVAL,'" + directorName.getText() + "')");
 						JOptionPane.showMessageDialog(null,
 								directorName.getText() + " successfully added to the database!");
 					} catch (SQLException e1) {
@@ -471,7 +471,7 @@ public class MenuBar {
 
 			} catch (Exception e2) {
 				// TODO: handle exception
-				
+
 			}
 
 		}
@@ -643,17 +643,19 @@ public class MenuBar {
 
 									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
 								} else {
-									st.executeQuery("UPDATE MOVIE SET TITLE = '" + movieName.getText() + "' WHERE MOVIE_ID = "
-											+ (updateID));
-									st.executeQuery("UPDATE MOVIE SET BUDGET = '"
-											+ Integer.parseInt(movieBudget.getText()) + "' WHERE MOVIE_ID = " + (updateID));
+									st.executeQuery("UPDATE MOVIE SET TITLE = '" + movieName.getText()
+											+ "' WHERE MOVIE_ID = " + (updateID));
+									st.executeQuery(
+											"UPDATE MOVIE SET BUDGET = '" + Integer.parseInt(movieBudget.getText())
+													+ "' WHERE MOVIE_ID = " + (updateID));
 									st.executeQuery("UPDATE MOVIE SET BOX_OFFICE = '"
 											+ Integer.parseInt(movieBoxOffice.getText()) + "' WHERE MOVIE_ID = "
 											+ (updateID));
 									st.executeQuery("UPDATE MOVIE SET RELEASE_DATE = TO_DATE('" + movieDate.getText()
 											+ "','YYYY/MM/DD') WHERE MOVIE_ID = " + (updateID));
-									st.executeQuery("UPDATE MOVIE SET RATING = '"
-											+ Integer.parseInt(movieRating.getText()) + "' WHERE MOVIE_ID = " + (updateID));
+									st.executeQuery(
+											"UPDATE MOVIE SET RATING = '" + Integer.parseInt(movieRating.getText())
+													+ "' WHERE MOVIE_ID = " + (updateID));
 								}
 							}
 
@@ -709,7 +711,7 @@ public class MenuBar {
 						deleteID = Integer.parseInt(ID.getText());
 						try {
 							st = c.createStatement();
-							st.executeQuery("DELETE FROM MOVIE WHERE MOVIE_ID = " + (deleteID));					
+							st.executeQuery("DELETE FROM MOVIE WHERE MOVIE_ID = " + (deleteID));
 							frame.remove(resultPane);
 							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM MOVIE");
 							frame.add(resultPane);
@@ -912,7 +914,7 @@ public class MenuBar {
 
 	public class addAward implements ActionListener {// done
 
-		public void actionPerformed(ActionEvent e) {//done2
+		public void actionPerformed(ActionEvent e) {// done2
 
 			JTextField awardName = new JTextField();
 			JTextField awardDate = new JTextField();
@@ -1010,7 +1012,7 @@ public class MenuBar {
 
 	public class addStudio implements ActionListener {// done
 
-		public void actionPerformed(ActionEvent e) {//done2
+		public void actionPerformed(ActionEvent e) {// done2
 
 			JTextField studioName = new JTextField();
 			JTextField studioCEO = new JTextField();
@@ -1121,19 +1123,29 @@ public class MenuBar {
 
 			JTextField searchField = new JTextField();
 			Object[] message = { "Searching Argument(s):", searchField, };
-			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "Find Studio", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 				try {
 					frame.remove(resultPane);
 
 					resultPane = TableCreator.createPanelWithResultSet(c,
-							"SELECT NAME FROM STUDIO WHERE (NAME LIKE '"
+							"SELECT * FROM STUDIO WHERE (NAME LIKE '"
 									+ searchField.getText().substring(0, 1).toUpperCase()
 									+ searchField.getText().substring(1) + "%') OR (NAME LIKE '%"
 									+ searchField.getText() + "%') OR (NAME LIKE '%" + searchField.getText() + "')");
+					
 					frame.add(resultPane);
 					frame.validate();
-
+					JTextField getId = new JTextField();
+					Object[] msg = { "Enter the ID of the Element that you want to view:", getId, };
+					int opt = JOptionPane.showConfirmDialog(null, msg, "Show Studio", JOptionPane.OK_CANCEL_OPTION);
+					if (opt == JOptionPane.OK_OPTION) {
+						frame.remove(resultPane);
+						resultPane = TableCreator.createPanelWithResultSet(c,
+								"SELECT STUDIO.NAME , MOVIE.TITLE , MOVIE.RELEASE_DATE, MOVIE.RATING FROM MOVIE,STUDIO FULL JOIN MOVIE_PROJECT ON MOVIE_PROJECT.STUDIO_ID = STUDIO.STUDIO_ID WHERE MOVIE_PROJECT.MOVIE_ID = MOVIE.MOVIE_ID AND STUDIO.STUDIO_ID = " + getId.getText() );
+						frame.add(resultPane);
+						frame.validate();
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
@@ -1154,7 +1166,7 @@ public class MenuBar {
 
 			JTextField searchField = new JTextField();
 			Object[] message = { "Searching Argument(s):", searchField, };
-			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "Find Actor", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 				try {
 					frame.remove(resultPane);
@@ -1163,11 +1175,19 @@ public class MenuBar {
 							"SELECT * FROM ACTOR " + "WHERE (NAME LIKE '"
 									+ searchField.getText().substring(0, 1).toUpperCase()
 									+ searchField.getText().substring(1) + "%') OR (NAME LIKE '%"
-									+ searchField.getText() + "%') OR (NAME LIKE '%" + searchField.getText() + "')");
-					frame.validate();
+									+ searchField.getText().toLowerCase() + "%') OR (NAME LIKE '%" + searchField.getText().toLowerCase() + "')");
 					frame.add(resultPane);
 					frame.validate();
-
+					JTextField getId = new JTextField();
+					Object[] msg = { "Enter the ID of the Element that you want to view:", getId, };
+					int opt = JOptionPane.showConfirmDialog(null, msg, "Show Actor", JOptionPane.OK_CANCEL_OPTION);
+					if (opt == JOptionPane.OK_OPTION) {
+						frame.remove(resultPane);
+						resultPane = TableCreator.createPanelWithResultSet(c,
+								"SELECT ACTOR.ACTOR_ID , ACTOR.NAME , MOVIE.TITLE FROM MOVIE, ACTOR FULL  JOIN ACTOR_AWARDS ON ACTOR_AWARDS.ACTOR_ID = ACTOR.ACTOR_ID FULL JOIN MOVIE_CAST ON MOVIE_CAST.ACTOR_ID = ACTOR.ACTOR_ID  WHERE ACTOR.ACTOR_ID = " + getId.getText() + " AND MOVIE_CAST.MOVIE_ID = MOVIE.MOVIE_ID");
+						frame.add(resultPane);
+						frame.validate();
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
@@ -1188,7 +1208,7 @@ public class MenuBar {
 
 			JTextField searchField = new JTextField();
 			Object[] message = { "Searching Argument(s):", searchField, };
-			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "Find Director", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 				try {
 					frame.remove(resultPane);
@@ -1197,10 +1217,20 @@ public class MenuBar {
 							"SELECT * FROM DIRECTOR WHERE (NAME LIKE '"
 									+ searchField.getText().substring(0, 1).toUpperCase()
 									+ searchField.getText().substring(0) + "%') OR (NAME LIKE '%"
-									+ searchField.getText() + "%') OR (NAME LIKE '%" + searchField.getText() + "')");
+									+ searchField.getText().toLowerCase() + "%') OR (NAME LIKE '%" + searchField.getText().toLowerCase() + "')");
 					frame.validate();
 					frame.add(resultPane);
 					frame.validate();
+					JTextField getId = new JTextField();
+					Object[] msg = { "Enter the ID of the Element that you want to view:", getId, };
+					int opt = JOptionPane.showConfirmDialog(null, msg, "Show Director", JOptionPane.OK_CANCEL_OPTION);
+					if (opt == JOptionPane.OK_OPTION) {
+						frame.remove(resultPane);
+						resultPane = TableCreator.createPanelWithResultSet(c,
+								"SELECT * FROM DIRECTOR INNER JOIN MOVIE_PROJECT ON " + getId.getText() + " = DIRECTOR.DIRECTOR_ID");
+						frame.add(resultPane);
+						frame.validate();
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
@@ -1221,7 +1251,7 @@ public class MenuBar {
 
 			JTextField searchField = new JTextField();
 			Object[] message = { "Searching Argument(s):", searchField, };
-			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "Find Award", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 				try {
 
@@ -1229,13 +1259,23 @@ public class MenuBar {
 					resultPane = TableCreator.createPanelWithResultSet(c,
 							"SELECT AWARD_NAME FROM AWARDS WHERE (AWARD_NAME LIKE '"
 									+ searchField.getText().substring(0, 1).toUpperCase()
-									+ searchField.getText().substring(0) + "%') OR (AWARD_NAME LIKE '%"
-									+ searchField.getText() + "%') OR (AWARD_NAME LIKE '%" + searchField.getText()
+									+ searchField.getText().substring(1).toLowerCase() + "%') OR (AWARD_NAME LIKE '%"
+									+ searchField.getText().toLowerCase() + "%') OR (AWARD_NAME LIKE '%" + searchField.getText().toLowerCase()
 									+ "')");
 
 					frame.validate();
 					frame.add(resultPane);
 					frame.validate();
+					JTextField getId = new JTextField();
+					Object[] msg = { "Enter the ID of the Element that you want to view:", getId, };
+					int opt = JOptionPane.showConfirmDialog(null, msg, "Show Award", JOptionPane.OK_CANCEL_OPTION);
+					if (opt == JOptionPane.OK_OPTION) {
+						frame.remove(resultPane);
+						resultPane = TableCreator.createPanelWithResultSet(c,
+								"SELECT * FROM AWARD INNER JOIN MOVIE_CAST ON " + getId.getText() + " = ACTOR.ACTOR_ID");
+						frame.add(resultPane);
+						frame.validate();
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
@@ -1264,11 +1304,25 @@ public class MenuBar {
 					resultPane = TableCreator.createPanelWithResultSet(c,
 							"SELECT * FROM MOVIE WHERE (TITLE LIKE '"
 									+ searchField.getText().substring(0, 1).toUpperCase()
-									+ searchField.getText().substring(0) + "%') OR (TITLE LIKE '%"
+									+ searchField.getText().substring(1).toLowerCase() + "%') OR (TITLE LIKE '%"
 									+ searchField.getText() + "%') OR (TITLE LIKE '%" + searchField.getText() + "')");
 					frame.validate();
 					frame.add(resultPane);
 					frame.validate();
+					JTextField getId = new JTextField();
+					Object[] msg = { "Enter the ID of the Element that you want to view:", getId, };
+					int opt = JOptionPane.showConfirmDialog(null, msg, "Show Movie", JOptionPane.OK_CANCEL_OPTION);
+					if (opt == JOptionPane.OK_OPTION) {
+						frame.remove(resultPane);
+						resultPane = TableCreator.createPanelWithResultSet(c,
+								"SELECT * FROM MOVIE " + 
+								"FULL  JOIN MOVIE_AWARDS ON MOVIE_AWARDS.MOVIE_ID = MOVIE.MOVIE_ID " + 
+								"FULL  JOIN MOVIE_CAST ON MOVIE_CAST.MOVIE_ID = MOVIE.MOVIE_ID " + 
+								"FULL JOIN MOVIE_PROJECT ON MOVIE_PROJECT.MOVIE_ID = MOVIE.MOVIE_ID " + 
+								"WHERE MOVIE.MOVIE_ID = " + getId.getText() + " ");
+						frame.add(resultPane);
+						frame.validate();
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "Something wrong has happened! Check your input!");
@@ -1399,9 +1453,9 @@ public class MenuBar {
 									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
 								} else {
 									st.executeQuery("UPDATE STUDIO SET NAME = '" + studioName.getText()
-									+ "' WHERE STUDIO_ID = " + (updateID));
+											+ "' WHERE STUDIO_ID = " + (updateID));
 									st.executeQuery("UPDATE STUDIO SET CURRENT_CEO = '" + studioCEO.getText()
-									+ "' WHERE STUDIO_ID = " + (updateID));
+											+ "' WHERE STUDIO_ID = " + (updateID));
 									st.executeQuery("UPDATE STUDIO SET STOCKMARKETVALUE = '"
 											+ Integer.parseInt(studioValue.getText()) + "' WHERE STUDIO_ID = "
 											+ (updateID));
@@ -1414,7 +1468,7 @@ public class MenuBar {
 							frame.validate();
 							frame.add(resultPane);
 							frame.validate();
-							
+
 						} catch (Exception e2) {
 							// TODO: handle exception
 						}
@@ -1430,7 +1484,7 @@ public class MenuBar {
 
 		}
 	}
-	
+
 	public class createProject implements ActionListener {
 
 		@Override
@@ -1441,22 +1495,21 @@ public class MenuBar {
 			JTextField studio = new JTextField();
 			JTextField moovie = new JTextField();
 
-
-			
 			Object[] message = { "Cast IDs List (seperate by comma):", actors, "Director Id:", director,
 					"Producer Studio ID:", studio, "Movie ID:", moovie };
 
 			int option = JOptionPane.showConfirmDialog(null, message, "New  Movie", JOptionPane.OK_CANCEL_OPTION);
-			
+
 			if (option == JOptionPane.OK_OPTION) {
 				String sqlS = "INSERT INTO MOVIE_PROJECT VALUES (" + Integer.parseInt(moovie.getText()) + ","
-						+ Integer.parseInt(director.getText()) + "," + Integer.parseInt(studio.getText()) + ",mp_id_creator.nextval)";
+						+ Integer.parseInt(director.getText()) + "," + Integer.parseInt(studio.getText())
+						+ ",mp_id_creator.nextval)";
 				try {
 					Statement st = c.createStatement();
 					st.executeQuery(sqlS);
 					if (actors.getText().contains(",")) {
 						String actL[] = actors.getText().split(",");
-						for(String s : actL) {
+						for (String s : actL) {
 							sqlS = "INSERT INTO MOVIE_CAST VALUES (" + Integer.parseInt(s) + ","
 									+ Integer.parseInt(studio.getText()) + ")";
 							st.executeQuery(sqlS);
@@ -1465,8 +1518,8 @@ public class MenuBar {
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}	
-				
+				}
+
 			}
 		}
 
@@ -1491,4 +1544,4 @@ public class MenuBar {
 
 	}
 
-	}
+}

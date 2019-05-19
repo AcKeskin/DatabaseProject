@@ -24,7 +24,7 @@ public abstract class Connector {
 		}
 		Connection con = null;
 		try {
-			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "DATA", "system123");
+			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", username, password);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "->Incorrect username or password\n->Database connection could not be established", "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
