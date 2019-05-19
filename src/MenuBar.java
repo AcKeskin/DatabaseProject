@@ -202,7 +202,6 @@ public class MenuBar {
 		String statement = null;
 		File f = new File("statements.txt");
 		try {
-			
 			if(f.exists()) {
 				
 				Scanner sc = new Scanner(f);
@@ -220,7 +219,7 @@ public class MenuBar {
 				int lineNum = rd.nextInt(lineCount);
 				System.out.println(lineCount);
 				System.out.println(lineNum);
-				for(int i = 0; i<=lineNum; i++)
+				for(int i = 0; i<lineNum; i++)
 					System.out.println(sc.nextLine());
 				
 				return sc.nextLine();
