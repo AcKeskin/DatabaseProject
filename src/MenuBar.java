@@ -166,7 +166,7 @@ public class MenuBar {
 		// frame.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		resultPane = new JScrollPane();
 		resultPane.setBackground(Color.RED);
-		frame.setLayout(new GridLayout(1,1));
+		frame.setLayout(new GridLayout(1, 1));
 		frame.setVisible(true);
 
 		// set the Jlabel
@@ -193,7 +193,7 @@ public class MenuBar {
 
 		// finally
 		resultPane = TableCreator.createPanelWithResultSet(c, returnRandomTableStatement());
-		if(resultPane != null)
+		if (resultPane != null)
 			frame.add(resultPane);
 		frame.validate();
 	}
@@ -202,30 +202,30 @@ public class MenuBar {
 		String statement = null;
 		File f = new File("statements.txt");
 		try {
-			if(f.exists()) {
-				
+			if (f.exists()) {
+
 				Scanner sc = new Scanner(f);
 				int lineCount = 0;
-				
-				while(sc.hasNextLine()) {
-					
+
+				while (sc.hasNextLine()) {
+
 					sc.nextLine();
 					lineCount++;
 				}
 				sc.close();
 				sc = new Scanner(f);
 				Random rd = new Random();
-				
+
 				int lineNum = rd.nextInt(lineCount);
 				System.out.println(lineCount);
 				System.out.println(lineNum);
-				for(int i = 0; i<lineNum; i++)
+				for (int i = 0; i < lineNum; i++)
 					System.out.println(sc.nextLine());
-				
+
 				return sc.nextLine();
-				
+
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
@@ -391,8 +391,11 @@ public class MenuBar {
 
 		// CON
 
+		createProject cp = new createProject();
+		movieProject.addActionListener(cp);
 
 	}
+
 	public class logInEvent implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -426,15 +429,11 @@ public class MenuBar {
 			Object[] message = { "Director Name:", directorName, };
 
 			Statement st = null;
-			int directorID = -1;
 			try {
 				st = c.createStatement();
-				ResultSet rs = st.executeQuery("SELECT MAX(DIRECTOR_ID) FROM DIRECTOR");
-				rs.next();
-				directorID = rs.getInt(1);
-				System.out.println(directorID);
-			} catch (Exception e2) {
-				// TODO: handle exception
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
 			}
 
 			int option = JOptionPane.showConfirmDialog(null, message, "New Director", JOptionPane.OK_CANCEL_OPTION);
@@ -446,8 +445,8 @@ public class MenuBar {
 				else {
 					// add director here
 					try {
-						st.executeQuery("INSERT INTO DIRECTOR VALUES(dr_id_creator.NEXTVAL,'"
-								+ directorName.getText() + "')");
+						st.executeQuery(
+								"INSERT INTO DIRECTOR VALUES(dr_id_creator.NEXTVAL,'" + directorName.getText() + "')");
 						JOptionPane.showMessageDialog(null,
 								directorName.getText() + " successfully added to the database!");
 					} catch (SQLException e1) {
@@ -497,6 +496,8 @@ public class MenuBar {
 						} catch (SQLIntegrityConstraintViolationException e2) {
 							// TODO: handle exception
 							st.executeQuery("DELETE FROM MOVIE_PROJECT WHERE DIRECTOR_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM DIRECTOR_AWARDS WHERE DIRECTOR_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM DIRECTOR WHERE DIRECTOR_ID = " + (deleteID));
 							frame.remove(resultPane);
 							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM DIRECTOR");
 							frame.add(resultPane);
@@ -553,7 +554,7 @@ public class MenuBar {
 									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
 								} else {
 									st.executeQuery("UPDATE DIRECTOR SET NAME = '" + name.getText()
-									+ "' WHERE DIRECTOR_ID = " + (updateID));
+											+ "' WHERE DIRECTOR_ID = " + (updateID));
 								}
 							}
 							frame.remove(resultPane);
@@ -612,10 +613,10 @@ public class MenuBar {
 				} else {
 					try {
 						st.executeQuery("INSERT INTO MOVIE VALUES(m_id_creator.NEXTVAL,'" + movieName.getText()
-						+ "',TO_DATE('" + movieDate.getText() + "', 'YYYY/MM/DD'),"
-						+ Integer.parseInt(movieBoxOffice.getText()) + ",'" + movieMPAA.getText() + "',"
-						+ Integer.parseInt(movieBudget.getText()) + ","
-						+ Integer.parseInt(movieRating.getText()) + ")");
+								+ "',TO_DATE('" + movieDate.getText() + "', 'YYYY/MM/DD'),"
+								+ Integer.parseInt(movieBoxOffice.getText()) + ",'" + movieMPAA.getText() + "',"
+								+ Integer.parseInt(movieBudget.getText()) + ","
+								+ Integer.parseInt(movieRating.getText()) + ")");
 
 						JOptionPane.showMessageDialog(null,
 								movieName.getText() + " successfully added to the database!");
@@ -682,17 +683,19 @@ public class MenuBar {
 
 									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
 								} else {
-									st.executeQuery("UPDATE MOVIE SET TITLE = '" + movieName.getText() + "' WHERE MOVIE_ID = "
-											+ (updateID));
-									st.executeQuery("UPDATE MOVIE SET BUDGET = '"
-											+ Integer.parseInt(movieBudget.getText()) + "' WHERE MOVIE_ID = " + (updateID));
+									st.executeQuery("UPDATE MOVIE SET TITLE = '" + movieName.getText()
+											+ "' WHERE MOVIE_ID = " + (updateID));
+									st.executeQuery(
+											"UPDATE MOVIE SET BUDGET = '" + Integer.parseInt(movieBudget.getText())
+													+ "' WHERE MOVIE_ID = " + (updateID));
 									st.executeQuery("UPDATE MOVIE SET BOX_OFFICE = '"
 											+ Integer.parseInt(movieBoxOffice.getText()) + "' WHERE MOVIE_ID = "
 											+ (updateID));
 									st.executeQuery("UPDATE MOVIE SET RELEASE_DATE = TO_DATE('" + movieDate.getText()
-									+ "','YYYY/MM/DD') WHERE MOVIE_ID = " + (updateID));
-									st.executeQuery("UPDATE MOVIE SET RATING = '"
-											+ Integer.parseInt(movieRating.getText()) + "' WHERE MOVIE_ID = " + (updateID));
+											+ "','YYYY/MM/DD') WHERE MOVIE_ID = " + (updateID));
+									st.executeQuery(
+											"UPDATE MOVIE SET RATING = '" + Integer.parseInt(movieRating.getText())
+													+ "' WHERE MOVIE_ID = " + (updateID));
 								}
 							}
 
@@ -748,7 +751,7 @@ public class MenuBar {
 						deleteID = Integer.parseInt(ID.getText());
 						try {
 							st = c.createStatement();
-							st.executeQuery("DELETE FROM MOVIE WHERE MOVIE_ID = " + (deleteID));					
+							st.executeQuery("DELETE FROM MOVIE WHERE MOVIE_ID = " + (deleteID));
 							frame.remove(resultPane);
 							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM MOVIE");
 							frame.add(resultPane);
@@ -757,6 +760,9 @@ public class MenuBar {
 						} catch (SQLIntegrityConstraintViolationException e2) {
 							// TODO: handle exception
 							st.executeQuery("DELETE FROM MOVIE_PROJECT WHERE MOVIE_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM MOVIE_CAST WHERE MOVIE_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM MOVIE_AWARDS WHERE MOVIE_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM MOVIE WHERE MOVIE_ID = " + (deleteID));
 							frame.remove(resultPane);
 							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM MOVIE");
 							frame.add(resultPane);
@@ -860,7 +866,9 @@ public class MenuBar {
 
 						} catch (SQLIntegrityConstraintViolationException e2) {
 							// TODO: handle exception
-							st.executeQuery("DELETE FROM MOVIE_PROJECT WHERE ACTOR_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM MOVIE_CAST WHERE ACTOR_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM ACTOR_AWARDS WHERE ACTOR_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM ACTOR WHERE ACTOR_ID = " + (deleteID));
 							frame.remove(resultPane);
 							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM ACTOR");
 							frame.add(resultPane);
@@ -921,9 +929,9 @@ public class MenuBar {
 									st.executeQuery("UPDATE ACTOR SET NAME = '" + name.getText() + "' WHERE ACTOR_ID = "
 											+ (updateID));
 									st.executeQuery("UPDATE ACTOR SET HEIGHT = '" + Integer.parseInt(height.getText())
-									+ "' WHERE ACTOR_ID = " + (updateID));
+											+ "' WHERE ACTOR_ID = " + (updateID));
 									st.executeQuery("UPDATE ACTOR SET WEIGHT = '" + Integer.parseInt(weight.getText())
-									+ "' WHERE ACTOR_ID = " + (updateID));
+											+ "' WHERE ACTOR_ID = " + (updateID));
 									st.executeQuery("UPDATE ACTOR SET HAIR = '" + hair.getText() + "' WHERE ACTOR_ID = "
 											+ (updateID));
 								}
@@ -951,7 +959,7 @@ public class MenuBar {
 
 	public class addAward implements ActionListener {// done
 
-		public void actionPerformed(ActionEvent e) {//done2
+		public void actionPerformed(ActionEvent e) {// done2
 
 			JTextField awardName = new JTextField();
 			JTextField awardDate = new JTextField();
@@ -1030,8 +1038,16 @@ public class MenuBar {
 							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM AWARDS");
 							frame.add(resultPane);
 							frame.validate();
-						} catch (Exception e2) {
+						} catch (SQLIntegrityConstraintViolationException e2) {
 							// TODO: handle exception
+							st.executeQuery("DELETE FROM ACTOR_AWARDS WHERE AWARD_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM MOVIE_AWARDS WHERE AWARD_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM DIRECTOR_AWARDS WHERE AWARD_ID = " + (deleteID));
+							st.executeQuery("DELETE FROM AWARDS WHERE AWARD_ID = " + (deleteID));
+							frame.remove(resultPane);
+							resultPane = TableCreator.createPanelWithResultSet(c, "SELECT * FROM AWARDS");
+							frame.add(resultPane);
+							frame.validate();
 						}
 					}
 				} else {
@@ -1049,7 +1065,7 @@ public class MenuBar {
 
 	public class addStudio implements ActionListener {// done
 
-		public void actionPerformed(ActionEvent e) {//done2
+		public void actionPerformed(ActionEvent e) {// done2
 
 			JTextField studioName = new JTextField();
 			JTextField studioCEO = new JTextField();
@@ -1076,7 +1092,7 @@ public class MenuBar {
 				} else {
 					try {
 						st.executeQuery("INSERT INTO STUDIO VALUES(st_id_creator.NEXTVAL,'" + studioName.getText()
-						+ "','" + studioCEO.getText() + "'," + Integer.parseInt(studioValue.getText()) + ")");
+								+ "','" + studioCEO.getText() + "'," + Integer.parseInt(studioValue.getText()) + ")");
 
 						/*
 						 * table = new JFrame("ANAN");
@@ -1160,7 +1176,7 @@ public class MenuBar {
 
 			JTextField searchField = new JTextField();
 			Object[] message = { "Searching Argument(s):", searchField, };
-			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "Search Studio", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 				try {
 					frame.remove(resultPane);
@@ -1193,7 +1209,7 @@ public class MenuBar {
 
 			JTextField searchField = new JTextField();
 			Object[] message = { "Searching Argument(s):", searchField, };
-			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "Search Actor", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 				try {
 					frame.remove(resultPane);
@@ -1227,7 +1243,7 @@ public class MenuBar {
 
 			JTextField searchField = new JTextField();
 			Object[] message = { "Searching Argument(s):", searchField, };
-			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "Search Director", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 				try {
 					frame.remove(resultPane);
@@ -1260,7 +1276,7 @@ public class MenuBar {
 
 			JTextField searchField = new JTextField();
 			Object[] message = { "Searching Argument(s):", searchField, };
-			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "Search Award", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 				try {
 
@@ -1295,7 +1311,7 @@ public class MenuBar {
 
 			JTextField searchField = new JTextField();
 			Object[] message = { "Searching Argument(s):", searchField, };
-			int option = JOptionPane.showConfirmDialog(null, message, "New Studio", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "Search Movie", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
 				try {
 
@@ -1366,10 +1382,10 @@ public class MenuBar {
 									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
 								} else {
 									st.executeQuery("UPDATE AWARDS SET AWARD_NAME = '" + movieName.getText()
-									+ "' WHERE AWARD_ID = " + (updateID));
+											+ "' WHERE AWARD_ID = " + (updateID));
 
 									st.executeQuery("UPDATE AWARDS SET AWARD_DATE = TO_DATE('" + movieDate.getText()
-									+ "','YYYY/MM/DD') WHERE AWARD_ID = " + (updateID));
+											+ "','YYYY/MM/DD') WHERE AWARD_ID = " + (updateID));
 
 								}
 							}
@@ -1438,9 +1454,9 @@ public class MenuBar {
 									JOptionPane.showMessageDialog(null, "New name cannot be empty!");
 								} else {
 									st.executeQuery("UPDATE STUDIO SET NAME = '" + studioName.getText()
-									+ "' WHERE STUDIO_ID = " + (updateID));
+											+ "' WHERE STUDIO_ID = " + (updateID));
 									st.executeQuery("UPDATE STUDIO SET CURRENT_CEO = '" + studioCEO.getText()
-									+ "' WHERE STUDIO_ID = " + (updateID));
+											+ "' WHERE STUDIO_ID = " + (updateID));
 									st.executeQuery("UPDATE STUDIO SET STOCKMARKETVALUE = '"
 											+ Integer.parseInt(studioValue.getText()) + "' WHERE STUDIO_ID = "
 											+ (updateID));
@@ -1480,31 +1496,48 @@ public class MenuBar {
 			JTextField studio = new JTextField();
 			JTextField moovie = new JTextField();
 
+			frame.setLayout(new GridLayout(4, 0));
+			JScrollPane act = TableCreator.createPanelWithResultSet(c, "SELECT ACTOR_ID , NAME FROM ACTOR");
+			JScrollPane mov = TableCreator.createPanelWithResultSet(c, "SELECT MOVIE_ID , TITLE FROM MOVIE");
+			JScrollPane dir = TableCreator.createPanelWithResultSet(c, "SELECT DIRECTOR_ID , NAME FROM DIRECTOR");
+			JScrollPane stu = TableCreator.createPanelWithResultSet(c, "SELECT STUDIO_ID , NAME FROM STUDIO");
 
+			frame.add(act);
+			frame.add(mov);
+			frame.add(dir);
+			frame.add(stu);
+			frame.validate();
 
 			Object[] message = { "Cast IDs List (seperate by comma):", actors, "Director Id:", director,
 					"Producer Studio ID:", studio, "Movie ID:", moovie };
 
-			int option = JOptionPane.showConfirmDialog(null, message, "New  Movie", JOptionPane.OK_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(null, message, "New Movie", JOptionPane.OK_CANCEL_OPTION);
 
 			if (option == JOptionPane.OK_OPTION) {
 				String sqlS = "INSERT INTO MOVIE_PROJECT VALUES (" + Integer.parseInt(moovie.getText()) + ","
-						+ Integer.parseInt(director.getText()) + "," + Integer.parseInt(studio.getText()) + ",mp_id_creator.nextval)";
+						+ Integer.parseInt(director.getText()) + "," + Integer.parseInt(studio.getText())
+						+ ",mp_id_creator.nextval)";
 				try {
 					Statement st = c.createStatement();
 					st.executeQuery(sqlS);
 					if (actors.getText().contains(",")) {
 						String actL[] = actors.getText().split(",");
-						for(String s : actL) {
-							sqlS = "INSERT INTO MOVIE_CAST VALUES (" + Integer.parseInt(s) + ","
-									+ Integer.parseInt(studio.getText()) + ")";
+						for (String s : actL) {
+							sqlS = "INSERT INTO MOVIE_CAST VALUES (" + Integer.parseInt(moovie.getText()) + ","
+									+ Integer.parseInt(s) + ")";
 							st.executeQuery(sqlS);
 						}
 					}
+					frame.removeAll();
+					frame.setLayout(new GridLayout(1, 1));
+					resultPane = TableCreator.createPanelWithResultSet(c,
+							"SELECT ACTOR.ACTOR_ID , ACTOR.NAME , MOVIE.TITLE , MOVIE.MOVIE_ID FROM MOVIE_CAST , ACTOR , MOVIE WHERE MOVIE_CAST.MOVIE_ID = MOVIE.MOVIE_ID AND MOVIE_CAST.ACTOR_ID = ACTOR.ACTOR_ID AND MOVIE_CAST.MOVIE_ID = "
+									+ moovie.getText());
+					frame.add(resultPane);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}	
+				}
 
 			}
 		}
